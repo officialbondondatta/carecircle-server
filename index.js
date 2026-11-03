@@ -26,11 +26,24 @@ export async function connectToMongoDB() {
 const connectToDB = await connectToMongoDB()
 const database = connectToDB.db("carecircle")
 const usersCollection = database.collection("users")
+const eventsCollection = database.collection("events")
 
 
 app.get('/', (req, res) => {
     res.send("CareCircle Server HomePage")
 })
+
+app.post('/create-event', async (req, res) => {
+    const data = req.body
+    const result = await eventsCollection.insertOne(data)
+    res.send(result)
+})
+
+app.get('/all-events', async (req, res) => {
+    const result = await eventsCollection.find().toArray()
+    res.send(result)
+})
+
 
 
 
