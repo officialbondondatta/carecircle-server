@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -29,6 +29,10 @@ const usersCollection = database.collection("user")
 const eventsCollection = database.collection("events")
 
 
+const verifyToken = async (req, res, next) => {
+    next()
+}
+
 app.get('/', (req, res) => {
     res.send("CareCircle Server HomePage")
 })
@@ -42,7 +46,7 @@ app.get('/user/:email', async (req, res) => {
 })
 
 
-app.post('/create-event', async (req, res) => {
+app.post('/create-event', verifyToken, async (req, res) => {
     const data = req.body
     const result = await eventsCollection.insertOne(data)
     res.send(result)
@@ -52,12 +56,29 @@ app.get('/all-events', async (req, res) => {
     const result = await eventsCollection.find().toArray()
     res.send(result)
 })
-app.get('/manage-events/:email', async (req, res) => {
+app.get('/manage-events/:email', verifyToken, async (req, res) => {
     const email = req.params.email
     const result = await eventsCollection.find({ userEmail: email }).toArray()
     res.send(result)
 })
 
+app.patch('/edit-event/:id', verifyToken, async (req, res) => {
+    const data = req.body
+    const id = req.params.id
+    const query = { "_id": new ObjectId(id) }
+    const options = { upsert: true }
+    const result = await eventsCollection.updateOne(query, {
+        $set: {
+            title: data.title,
+            description: data.description,
+            eventType: data.eventType,
+            image: data.image,
+            eventDate: data.eventDate,
+        }
+    }, options)
+
+    res.send(result)
+})
 
 
 
