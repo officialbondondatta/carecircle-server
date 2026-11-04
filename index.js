@@ -27,7 +27,7 @@ const connectToDB = await connectToMongoDB()
 const database = connectToDB.db("carecircle")
 const usersCollection = database.collection("user")
 const eventsCollection = database.collection("events")
-
+const joinedEventsCollection = database.collection("joined-events")
 
 const verifyToken = async (req, res, next) => {
     next()
@@ -45,6 +45,18 @@ app.get('/user/:email', async (req, res) => {
     res.send(result)
 })
 
+app.post("/join-event", verifyToken, async (req, res) => {
+    const data = req.body
+    const result = await joinedEventsCollection.insertOne(data)
+    res.send(result)
+})
+
+
+app.get("/join-event/:email", verifyToken, async (req, res) => {
+    const email = req.params.email
+    const result = await joinedEventsCollection.find({ userEmail: email }).toArray()
+    res.send(result)
+})
 
 app.post('/create-event', verifyToken, async (req, res) => {
     const data = req.body
