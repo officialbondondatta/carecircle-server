@@ -43,6 +43,10 @@ app.get('/all-events', async (req, res) => {
     const result = await eventsCollection.find().toArray()
     res.send(result)
 })
+app.get('/manage-events', async (req, res) => {
+    const result = await eventsCollection.find().toArray()
+    res.send(result)
+})
 
 
 
