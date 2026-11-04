@@ -54,7 +54,7 @@ app.post("/join-event", verifyToken, async (req, res) => {
 
 app.get("/join-event/:email", verifyToken, async (req, res) => {
     const email = req.params.email
-    const result = await joinedEventsCollection.find({ userEmail: email }).toArray()
+    const result = await joinedEventsCollection.find({ joinedUserEmail: email }).toArray()
     res.send(result)
 })
 
