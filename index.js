@@ -54,7 +54,7 @@ app.get('/all-events', async (req, res) => {
 })
 app.get('/manage-events/:email', async (req, res) => {
     const email = req.params.email
-    const result = await eventsCollection.find({ email: email }).toArray()
+    const result = await eventsCollection.find({ userEmail: email }).toArray()
     res.send(result)
 })
 
