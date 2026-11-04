@@ -80,6 +80,13 @@ app.patch('/edit-event/:id', verifyToken, async (req, res) => {
     res.send(result)
 })
 
+app.delete("/delete-event/:id", verifyToken, async (req, res) => {
+    const id = req.params.id
+    const query = { '_id': new ObjectId(id) }
+    const result = await eventsCollection.deleteOne(query)
+    res.send(result)
+})
+
 
 
 app.listen(PORT, () => {
