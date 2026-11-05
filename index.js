@@ -92,6 +92,14 @@ app.get('/all-events', async (req, res) => {
     const result = await eventsCollection.find().toArray()
     res.send(result)
 })
+app.get('/all-events/:id', async (req, res) => {
+    const id = req.params.id
+    const query = { '_id': new ObjectId(id) }
+    const result = await eventsCollection.findOne(query)
+    res.send(result)
+})
+
+
 app.get('/manage-events/:email', verifyToken, async (req, res) => {
     const email = req.params.email
     const result = await eventsCollection.find({ userEmail: email }).toArray()
