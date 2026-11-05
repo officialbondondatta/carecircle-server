@@ -42,7 +42,6 @@ const verifyToken = async (req, res, next) => {
     try {
         const JWKS = createRemoteJWKSet(new URL(`${process.env.LOCAL_URL}/api/auth/jwks`))
         const { payload } = await jwtVerify(token, JWKS)
-        console.log(payload)
         next()
     } catch (error) {
         return res.status(500).send({ msg: "internal server token Error" })
