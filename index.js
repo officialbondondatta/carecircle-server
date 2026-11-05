@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import { MongoClient, ObjectId } from 'mongodb';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -30,7 +31,22 @@ const eventsCollection = database.collection("events")
 const joinedEventsCollection = database.collection("joined-events")
 
 const verifyToken = async (req, res, next) => {
-    next()
+    const retriveToken = req.headers.authorization
+    if (!retriveToken) {
+        return res.status(401).send({ msg: "Unauthorized !" })
+    }
+    const token = retriveToken?.split(" ")[1]
+    if (!token) {
+        return res.status(401).send({ msg: "Unauthorized !" })
+    }
+    try {
+        const JWKS = createRemoteJWKSet(new URL(`${process.env.LOCAL_URL}/api/auth/jwks`))
+        const { payload } = await jwtVerify(token, JWKS)
+        console.log(payload)
+        next()
+    } catch (error) {
+        return res.status(500).send({ msg: "internal server token Error" })
+    }
 }
 
 app.get('/', (req, res) => {
