@@ -82,6 +82,11 @@ app.get('/manage-events/:email', verifyToken, async (req, res) => {
     res.send(result)
 })
 
+app.get('/featured-section', async (req, res) => {
+    const result = await eventsCollection.find().sort({ eventDate: -1 }).limit(6).toArray()
+    res.send(result)
+})
+
 app.patch('/edit-event/:id', verifyToken, async (req, res) => {
     const data = req.body
     const id = req.params.id
