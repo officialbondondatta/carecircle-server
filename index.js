@@ -58,6 +58,13 @@ app.get("/join-event/:email", verifyToken, async (req, res) => {
     res.send(result)
 })
 
+app.delete("/join-event/:id", verifyToken, async (req, res) => {
+    const id = req.params.id
+    const query = { '_id': new ObjectId(id) }
+    const result = await joinedEventsCollection.deleteOne(query)
+    res.send(result)
+})
+
 app.post('/create-event', verifyToken, async (req, res) => {
     const data = req.body
     const result = await eventsCollection.insertOne(data)
