@@ -60,6 +60,20 @@ app.get('/user/:email', async (req, res) => {
     })
     res.send(result)
 })
+app.patch('/user/:email', verifyToken, async (req, res) => {
+    const email = req.params.email
+    const updatedData = req.body
+    const options = { upsert: true }
+    const result = await usersCollection.updateOne({
+        email: email
+    }, {
+        $set: {
+            name: updatedData.name,
+            image: updatedData.iamge
+        }
+    }, options)
+    res.send(result)
+})
 
 app.post("/join-event", verifyToken, async (req, res) => {
     const data = req.body
