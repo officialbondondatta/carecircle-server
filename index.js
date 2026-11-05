@@ -83,7 +83,7 @@ app.get('/manage-events/:email', verifyToken, async (req, res) => {
 })
 
 app.get('/featured-section', async (req, res) => {
-    const result = await eventsCollection.find().sort({ eventDate: -1 }).limit(6).toArray()
+    const result = await eventsCollection.find().sort({ eventDate: 1 }).limit(6).toArray()
     res.send(result)
 })
 
