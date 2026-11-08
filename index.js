@@ -87,10 +87,12 @@ app.get("/join-event/:email", verifyToken, async (req, res) => {
     res.send(result)
 })
 
-app.delete("/join-event/:id", verifyToken, async (req, res) => {
+app.delete("/join-event/:id/:email", verifyToken, async (req, res) => {
     const id = req.params.id
+    const email = req.params.email
     const result = await joinedEventsCollection.deleteOne({
-        "event._id": id
+        "event._id": id,
+        "joinedUserEmail": email
     })
     res.send(result)
 })
